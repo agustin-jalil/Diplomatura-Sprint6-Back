@@ -5,6 +5,18 @@ const User = require('../models/User');
 
 const router = express.Router();
 
+router.get('/users', async (req, res) => {
+  try {
+    // Excluimos a los usuarios con el rol 'admin'
+    const users = await User.find({ role: { $ne: 'admin' } });
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los usuarios' });
+  }
+});
+
 // Registro
 router.post('/register', async (req, res) => {
     const { username, password, role } = req.body;
