@@ -17,13 +17,15 @@ router.get('/', async (req, res) => {
 
 // ✅ RUTA PÚBLICA - Obtener superhéroe por ID
 router.get('/:id', async (req, res) => {
-    try {
-        const hero = await Superhero.findById(req.params.id);
-        if (!hero) return res.status(404).json({ msg: 'No encontrado' });
-        res.json(hero);
-    } catch (err) {
-        res.status(500).json({ msg: 'Error al obtener el superhéroe' });
-    }
+  try {
+    const hero = await Superhero.findById(req.params.id).populate('owner', 'username role'); 
+    // 👆 Esto trae solo `username` y `role` del user
+
+    if (!hero) return res.status(404).json({ msg: 'No encontrado' });
+    res.json(hero);
+  } catch (err) {
+    res.status(500).json({ msg: 'Error al obtener el superhéroe' });
+  }
 });
 
 // 🔒 RUTA PROTEGIDA - Crear superhéroe (solo usuario autenticado)
